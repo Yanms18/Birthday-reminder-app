@@ -1,33 +1,31 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cron = require('node-cron');
 const nodemailer = require('nodemailer');
-
+const path = require('path');
+const mongoose = require('mongoose');
 const app = express();
 
-// Set Pug as the templating engine
-app.set('view engine', 'pug');
+const User = require('./models/User');
+
+
+const birthdayTestRoutes = require('./Birthdaytest');
+app.use(birthdayTestRoutes);
+
 app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Index.html'));
+});
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error(err));
 
-// Define a User schema to hold username, email, and date of birth
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email:    { type: String, required: true },
-  dob:      { type: Date,   required: true }
-});
-
-const User = mongoose.model('User', userSchema);
-
 // Route: Render the registration form
 app.get('/', (req, res) => {
-  res.render('index'); // See the UI template in the next section
+  res.render('index'); 
 });
 
 // Route: Process form submission to register a new user
@@ -49,7 +47,7 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 Cron Job: Every day at 7am, check for users whose birthday is today and send a greeting email.
 The cron syntax '0 7 * * *' ensures that the job runs at 7:00 AM each day.
 */
-cron.schedule('0 7 * * *', async () => {
+cron.schedule('15 21 * * *', async () => {
   console.log('Running birthday check at 7 AM...');
   const today = new Date();
   const currentDay = today.getDate();
@@ -100,3 +98,5 @@ cron.schedule('0 7 * * *', async () => {
     console.error('Error during birthday check:', e);
   }
 });
+
+module.exports.User = User;
