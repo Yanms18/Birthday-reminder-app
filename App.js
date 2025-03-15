@@ -49,7 +49,7 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 Cron Job: Every day at 7am, check for users whose birthday is today and send a greeting email.
 The cron syntax '0 7 * * *' ensures that the job runs at 7:00 AM each day.
 */
-cron.schedule('15 21 * * *', async () => {
+cron.schedule('0 7 * * *', async () => {
   console.log('Running birthday check at 7 AM...');
   const today = new Date();
   const currentDay = today.getDate();
