@@ -14,6 +14,8 @@ const birthdayTestRoutes = require('./Birthdaytest');
 app.use(birthdayTestRoutes);
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static(__dirname));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'Index.html'));
 });
