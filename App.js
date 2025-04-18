@@ -16,18 +16,10 @@ app.use(birthdayTestRoutes);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Index.html'));
-});
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error(err));
-
-// Route: Render the registration form
+// Serve index.html from the “views” folder
 app.get('/', (req, res) => {
-  res.render('index'); 
+  res.sendFile(path.join(__dirname, 'views', 'Index.html'));
 });
 
 // Route: Process form submission to register a new user
@@ -36,9 +28,9 @@ app.post('/', async (req, res) => {
   const user = new User({ username, email, dob });
   try {
     await user.save();
-    res.send('Registration successful.');
+    res.sendFile(path.join(__dirname, 'views', 'success.html'));
   } catch (err) {
-    res.status(500).send('Error registering user: ' + err.message);
+    res.sendFile(path.join(__dirname, 'views', 'error.html'));
   }
 });
 

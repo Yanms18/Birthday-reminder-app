@@ -42,7 +42,8 @@ router.get('/test-birthday-check', async (req, res) => {
           to: user.email,
           subject: 'Happy Birthday!',
           html: `<h1>Happy Birthday, ${user.username}!</h1>
-                 <p>Wishing you a wonderful day filled with joy and surprises.</p>`
+                 <p>May this special day bring you abundant blessings, answered prayers, and joyful moments 🎉🙏.
+                 Wishing you a year filled with peace, love, and endless happiness! 🌟</p>`
         };
         return transporter.sendMail(mailOptions);
       }));
