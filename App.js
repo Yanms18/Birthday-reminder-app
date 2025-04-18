@@ -71,15 +71,15 @@ cron.schedule('19 16 * * *', async () => {
       let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS
+          user: 'jtitor1997@gmail.com',
+          pass: 'aumkebausnrxfszw'
         }
       });
 
       // Loop over each user whose birthday is today and send an email
       birthdayUsers.forEach(async (user) => {
         let mailOptions = {
-          from: process.env.GMAIL_USER,
+          from: 'jtitor1997@gmail.com',
           to: user.email,
           subject: 'Happy Birthday!',
           html: `<h1>Happy Birthday, ${user.username}!</h1>
