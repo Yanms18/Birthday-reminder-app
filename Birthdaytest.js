@@ -1,3 +1,4 @@
+require('dotenv').config();        // ← load .env before using process.env
 const express = require('express');
 const nodemailer = require('nodemailer');
 const User = require('./models/User');
@@ -20,16 +21,22 @@ router.get('/test-birthday-check', async (req, res) => {
 
     if (birthdayUsers.length > 0) {
       let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        secure: true,
-        port: 587,
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,              // SSL
         auth: {
           user: process.env.GMAIL_USER,
           pass: process.env.GMAIL_PASS
         }
       });
 
-      birthdayUsers.forEach(async (user) => {
+      // optional: verify connection configuration
+      transporter.verify((err, success) => {
+        if (err) console.error('SMTP Connection Error:', err);
+        else console.log('SMTP Ready:', success);
+      });
+
+      await Promise.all(birthdayUsers.map(user => {
         let mailOptions = {
           from: process.env.GMAIL_USER,
           to: user.email,
@@ -37,15 +44,9 @@ router.get('/test-birthday-check', async (req, res) => {
           html: `<h1>Happy Birthday, ${user.username}!</h1>
                  <p>Wishing you a wonderful day filled with joy and surprises.</p>`
         };
+        return transporter.sendMail(mailOptions);
+      }));
 
-        try {
-            let info = await transporter.sendMail(mailOptions);
-            console.log(`Email sent to ${user.email}: ${info.response}`);
-          } catch (error) {
-            console.error(`Error sending email to ${user.email}: ${error}`);
-          }
-        });
-        
       res.send('Birthday check triggered. Emails sent if any birthdays match today.');
     } else {
       res.send('No birthdays today.');
