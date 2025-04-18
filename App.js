@@ -22,6 +22,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'Index.html'));
 });
 
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error(err));
+
+
+app.use(bodyParser.json());
+
 // Route: Process form submission to register a new user
 app.post('/', async (req, res) => {
   const { username, email, dob } = req.body;
@@ -30,6 +38,7 @@ app.post('/', async (req, res) => {
     await user.save();
     res.sendFile(path.join(__dirname, 'views', 'success.html'));
   } catch (err) {
+    console.error('Error saving user:', err);
     res.sendFile(path.join(__dirname, 'views', 'error.html'));
   }
 });
