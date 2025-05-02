@@ -39,7 +39,7 @@ Fill in your username, email, and date of birth.
 
 ## Manually Testing Birthday Reminders
 
-Visit: http://localhost:3000/test-birthday-check
+Visit: http://{baseurl}/test-birthday-check
 
 This checks today’s date and sends a “Happy Birthday!” email to users whose date of birth matches today.
 
