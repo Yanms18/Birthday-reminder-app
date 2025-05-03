@@ -9,13 +9,13 @@ const app = express();
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const oauth2Client = new OAuth2(
-     "801166644372-r81kh5l4dojlmvmqddohslhpdgljtfa4.apps.googleusercontent.com", // ClientID
-     "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", // Client Secret
+     process.env.GMAIL_CLIENT_ID, // ClientID
+     process.env.GMAIL_CLIENT_SECRET, // Client Secret
      "https://developers.google.com/oauthplayground" // Redirect URL
 );
 
 oauth2Client.setCredentials({
-     refresh_token: "1//04TE2odWn2QwMCgYIARAAGAQSNwF-L9Ir1OZV0crBHSGTuI2_HypO3qUEiWv54jVBs76HcQkDao_h2TfokBp-cVuk1eMCgm-f_hY"
+     refresh_token: process.env.GMAIL_REFRESH_TOKEN
 });
 const accessToken = oauth2Client.getAccessToken();
 
@@ -82,13 +82,13 @@ cron.schedule('0 7 * * *', async () => {
     if (birthdayUsers.length > 0) {
       // Configure Nodemailer with Gmail SMTP
       let transporter = nodemailer.createTransport({
-              service: 'gmail',             // SSL
+              service: 'gmail',
               auth: {
                 type: 'OAuth2',
-                user: 'jejeoluwayanmife@gmail.com',
-                 clientId: "801166644372-r81kh5l4dojlmvmqddohslhpdgljtfa4.apps.googleusercontent.com",
-                clientSecret: "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",
-                refreshToken: "1//04TE2odWn2QwMCgYIARAAGAQSNwF-L9Ir1OZV0crBHSGTuI2_HypO3qUEiWv54jVBs76HcQkDao_h2TfokBp-cVuk1eMCgm-f_hY",
+                user: process.env.GMAIL_USER,
+                clientId: process.env.GMAIL_CLIENT_ID,
+                clientSecret: process.env.GMAIL_CLIENT_SECRET,
+                refreshToken: process.env.GMAIL_REFRESH_TOKEN,
                 accessToken: accessToken
               }
             });
